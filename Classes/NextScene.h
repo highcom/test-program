@@ -33,6 +33,18 @@ public:
 	};
 	*/
 
+	// ââéZéqä÷êî
+	void warufunc(cocos2d::Ref* pSender);
+	void kakerufunc(cocos2d::Ref* pSender);
+	void hikufunc(cocos2d::Ref* pSender);
+	void tasufunc(cocos2d::Ref* pSender);
+	void equalfunc(cocos2d::Ref* pSender);
+	void tenfunc(cocos2d::Ref* pSender);
+	void leftfunc(cocos2d::Ref* pSender);
+	void rightfunc(cocos2d::Ref* pSender);
+	void clearfunc(cocos2d::Ref* pSender);
+	void clearendfunc(cocos2d::Ref* pSender);
+
 	// implement the "static create()" method manually
 	CREATE_FUNC(NextScene);
 };
