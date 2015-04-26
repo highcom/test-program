@@ -53,7 +53,7 @@ bool NextScene::init()
 	// add the sprite as a child to this layer
 	this->addChild(sprite, 0);
 
-	// •\¦ƒGƒŠƒA‚ğì¬
+	// ï¿½\ï¿½ï¿½ï¿½Gï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ì¬
 	auto disp = LayerColor::create(Color4B::WHITE, 500, 50);
 	disp->setPosition(Vec2(visibleSize.width*.2, visibleSize.height*.9));
 	this->addChild(disp, 1);
@@ -68,23 +68,23 @@ bool NextScene::init()
 	dispnum->setPosition(Vec2(visibleSize.width*.5, visibleSize.height*.95));
 	this->addChild(dispnum, 1);
 
-	// ŠÖ”ƒ|ƒCƒ“ƒ^‚Ì“o˜^‚Í‚ ‚Á‚Ä‚¢‚é‚ªAŠÖ”ƒ|ƒCƒ“ƒ^‚ğƒR[ƒ‹ƒoƒbƒN‚É“o˜^‚Í‚Å‚«‚È‚¢‚æ‚¤‚¾
+	// ï¿½Öï¿½ï¿½|ï¿½Cï¿½ï¿½ï¿½^ï¿½Ì“oï¿½^ï¿½Í‚ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚ªï¿½Aï¿½Öï¿½ï¿½|ï¿½Cï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Rï¿½[ï¿½ï¿½ï¿½oï¿½bï¿½Nï¿½É“oï¿½^ï¿½Í‚Å‚ï¿½ï¿½È‚ï¿½ï¿½æ‚¤ï¿½ï¿½
 	NextScene nc;
 	void (NextScene::*calcfunc[10])(cocos2d::Ref* pSender) = { &NextScene::calcfunc1, &NextScene::calcfunc2, &NextScene::calcfunc3, &NextScene::calcfunc4, &NextScene::calcfunc5,
 															   &NextScene::calcfunc6, &NextScene::calcfunc7, &NextScene::calcfunc8, &NextScene::calcfunc9, &NextScene::calcfunc0};
-	// ”šƒ{ƒ^ƒ“‚ğì¬
+	// ï¿½ï¿½ï¿½ï¿½ï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ì¬
 	for (int i = 1; i <= 10; i++)
 	{
-		//100*100‚ÉƒNƒƒbƒv
+		//100*100ï¿½ÉƒNï¿½ï¿½ï¿½bï¿½v
 		CCRect rectbef = CCRectMake(100 * (i - 1), 0, 100, 100);
 		CCSprite* numsbef = CCSprite::create("numbuttonbef.png", rectbef);
 		CCRect rectaft = CCRectMake(100 * (i - 1), 0, 100, 100);
 		CCSprite* numsaft = CCSprite::create("numbuttonaft.png", rectaft);
 
-		// ŒvZ—pŠÖ”ƒ|ƒCƒ“ƒ^‚ğƒR[ƒ‹ƒoƒbƒN‚É“o˜^‚µ‚½‚©‚Á‚½
+		// ï¿½vï¿½Zï¿½pï¿½Öï¿½ï¿½|ï¿½Cï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Rï¿½[ï¿½ï¿½ï¿½oï¿½bï¿½Nï¿½É“oï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		/*
 		auto numbutton = MenuItemSprite::create(numsbef, numsaft, CC_CALLBACK_1(nc.*calcfunc[i], this));
-		//ƒƒjƒ…[‚Ìì¬@pMenu‚Ì’†‚Énumbutton‚ğ“ü‚ê‚é
+		//ï¿½ï¿½ï¿½jï¿½ï¿½ï¿½[ï¿½Ìì¬ï¿½@pMenuï¿½Ì’ï¿½ï¿½ï¿½numbuttonï¿½ï¿½ï¿½ï¿½ï¿½
 		auto pMenu = Menu::create(numbutton, NULL);
 		pMenu->setPosition(ccp(visibleSize.width*i*.25, visibleSize.height / 2));
 		this->addChild(pMenu, 1);
@@ -162,7 +162,7 @@ bool NextScene::init()
 		}
 	}
 
-	// €‰‰Zqƒ{ƒ^ƒ“‚ğì¬
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½qï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ì¬
 	auto waruItem = MenuItemImage::create(
 		"warubef.png",
 		"waruaft.png",
@@ -172,7 +172,7 @@ bool NextScene::init()
 	warumenu->setPosition(Vec2::ZERO);
 	this->addChild(warumenu, 1);
 
-	// ~‰‰Zqƒ{ƒ^ƒ“‚ğì¬
+	// ï¿½~ï¿½ï¿½ï¿½Zï¿½qï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ì¬
 	auto kakeruItem = MenuItemImage::create(
 		"kakerubef.png",
 		"kakeruaft.png",
@@ -182,7 +182,7 @@ bool NextScene::init()
 	kakerumenu->setPosition(Vec2::ZERO);
 	this->addChild(kakerumenu, 1);
 
-	// |‰‰Zqƒ{ƒ^ƒ“‚ğì¬
+	// ï¿½|ï¿½ï¿½ï¿½Zï¿½qï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ì¬
 	auto hikuItem = MenuItemImage::create(
 		"hikubef.png",
 		"hikuaft.png",
@@ -192,7 +192,7 @@ bool NextScene::init()
 	hikumenu->setPosition(Vec2::ZERO);
 	this->addChild(hikumenu, 1);
 
-	// {‰‰Zqƒ{ƒ^ƒ“‚ğì¬
+	// ï¿½{ï¿½ï¿½ï¿½Zï¿½qï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ì¬
 	auto tasuItem = MenuItemImage::create(
 		"tasubef.png",
 		"tasuaft.png",
@@ -202,7 +202,7 @@ bool NextScene::init()
 	tasumenu->setPosition(Vec2::ZERO);
 	this->addChild(tasumenu, 1);
 
-	// ‰‰Zqƒ{ƒ^ƒ“‚ğì¬
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½qï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ì¬
 	auto equalItem = MenuItemImage::create(
 		"equalbef.png",
 		"equalaft.png",
@@ -212,7 +212,7 @@ bool NextScene::init()
 	equalmenu->setPosition(Vec2::ZERO);
 	this->addChild(equalmenu, 1);
 
-	// ƒhƒbƒgƒ{ƒ^ƒ“‚ğì¬
+	// ï¿½hï¿½bï¿½gï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ì¬
 	auto tenItem = MenuItemImage::create(
 		"tenbef.png",
 		"tenaft.png",
@@ -222,7 +222,7 @@ bool NextScene::init()
 	tenmenu->setPosition(Vec2::ZERO);
 	this->addChild(tenmenu, 1);
 
-	// CLEAR‰‰Zqƒ{ƒ^ƒ“‚ğì¬
+	// CLEARï¿½ï¿½ï¿½Zï¿½qï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ì¬
 	auto clearItem = MenuItemImage::create(
 		"clearbef.png",
 		"clearaft.png",
@@ -232,7 +232,7 @@ bool NextScene::init()
 	clearmenu->setPosition(Vec2::ZERO);
 	this->addChild(clearmenu, 1);
 
-	// CLEAREND‰‰Zqƒ{ƒ^ƒ“‚ğì¬
+	// CLEARENDï¿½ï¿½ï¿½Zï¿½qï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ì¬
 	auto clearendItem = MenuItemImage::create(
 		"clearendbef.png",
 		"clearendaft.png",
@@ -242,7 +242,7 @@ bool NextScene::init()
 	clearendmenu->setPosition(Vec2::ZERO);
 	this->addChild(clearendmenu, 1);
 
-	// ©‰‰Zqƒ{ƒ^ƒ“‚ğì¬
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½qï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ì¬
 	auto leftItem = MenuItemImage::create(
 		"leftbef.png",
 		"leftaft.png",
@@ -252,7 +252,7 @@ bool NextScene::init()
 	leftmenu->setPosition(Vec2::ZERO);
 	this->addChild(leftmenu, 1);
 
-	// ©‰‰Zqƒ{ƒ^ƒ“‚ğì¬
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½qï¿½{ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ì¬
 	auto rightItem = MenuItemImage::create(
 		"rightbef.png",
 		"rightaft.png",
@@ -279,7 +279,7 @@ void NextScene::menuCloseCallback(Ref* pSender)
 #endif
 }
 
-// ”š‚ğƒZƒbƒg‚·‚é
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½
 void set_number(string s)
 {
 	if (cr.resultstr.length() >= 16)
@@ -294,7 +294,12 @@ void set_number(string s)
 	cr.opera_flg = false;
 }
 
-// ‰‰Z‚·‚é
+// æ–‡å­—åˆ—å¤‰æ›
+template <typename T> std::string tostr(const T& t)
+{
+    std::ostringstream os; os<<t; return os.str();
+}
+// ï¿½ï¿½ï¿½Zï¿½ï¿½ï¿½ï¿½
 void calclation(char cal)
 {
 	stringstream str;
@@ -337,8 +342,8 @@ void calclation(char cal)
 		break;
 	}
 	cr.resultnum = result;
-	cr.resultstr = to_string(result);
-	dispnum->setString(to_string(result));
+	cr.resultstr = tostr(result);
+	dispnum->setString(tostr(result));
 
 	cr.opera = cal;
 	cr.opera_flg = true;
@@ -433,7 +438,7 @@ void NextScene::clearfunc(Ref* pSender)
 
 void NextScene::clearendfunc(Ref* pSender)
 {
-	dispnum->setString(to_string(cr.resultnum));
+	dispnum->setString(tostr(cr.resultnum));
 	cr.resultstr = "0";
 	cr.opera_flg = true;
 }
