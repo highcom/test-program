@@ -1,4 +1,4 @@
-#ifndef __CALC_RESULT_H__
+﻿#ifndef __CALC_RESULT_H__
 #define __CALC_RESULT_H__
 
 #include "cocos2d.h"

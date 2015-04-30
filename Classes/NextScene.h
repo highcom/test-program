@@ -1,4 +1,4 @@
-#ifndef __NEXT_SCENE_H__
+ï»¿#ifndef __NEXT_SCENE_H__
 #define __NEXT_SCENE_H__
 
 #include "cocos2d.h"
@@ -15,7 +15,7 @@ public:
 	// a selector callback
 	void menuCloseCallback(cocos2d::Ref* pSender);
 
-	// ŒvZ—pŠÖ”
+	// è¨ˆç®—ç”¨é–¢æ•°
 	void calcfunc1(cocos2d::Ref* pSender);
 	void calcfunc2(cocos2d::Ref* pSender);
 	void calcfunc3(cocos2d::Ref* pSender);
@@ -26,14 +26,14 @@ public:
 	void calcfunc8(cocos2d::Ref* pSender);
 	void calcfunc9(cocos2d::Ref* pSender);
 	void calcfunc0(cocos2d::Ref* pSender);
-	// ŒvZ—pŠÖ”ƒ|ƒCƒ“ƒ^
+	// è¨ˆç®—ç”¨é–¢æ•°ãƒã‚¤ãƒ³ã‚¿
 	/*
 	void(*calcfunc[])(cocos2d::Ref* pSender) = {
 		this->calcfunc1, this->calcfunc2, this->calcfunc3, this->calcfunc4, this->calcfunc5, this->calcfunc6, this->calcfunc7, this->calcfunc8, this->calcfunc9, this->calcfunc0
 	};
 	*/
 
-	// ‰‰ZqŠÖ”
+	// æ¼”ç®—å­é–¢æ•°
 	void warufunc(cocos2d::Ref* pSender);
 	void kakerufunc(cocos2d::Ref* pSender);
 	void hikufunc(cocos2d::Ref* pSender);

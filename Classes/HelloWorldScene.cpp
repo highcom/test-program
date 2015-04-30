@@ -1,4 +1,4 @@
-#include "HelloWorldScene.h"
+ï»¿#include "HelloWorldScene.h"
 #include "NextScene.h"
 
 USING_NS_CC;
@@ -73,14 +73,14 @@ bool HelloWorld::init()
     // add the sprite as a child to this layer
     this->addChild(sprite, 0);
     
-	//‰æ–ÊƒTƒCƒY‚ðŽæ“¾
+	//ç”»é¢ã‚µã‚¤ã‚ºã‚’å–å¾—
 	Size s = Director::getInstance()->getVisibleSize();
 
 
-	//ƒ^ƒbƒv‘O‚ÌƒXƒvƒ‰ƒCƒg
+	//ã‚¿ãƒƒãƒ—å‰ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	auto pNormalSprite = Sprite::create("button.png");
 	pNormalSprite->setOpacity(200);
-	//ƒ^ƒbƒvŽž‚ÌƒXƒvƒ‰ƒCƒg
+	//ã‚¿ãƒƒãƒ—æ™‚ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	auto pSelectedSprite = Sprite::create("buttontap.png");
 	pSelectedSprite->setOpacity(200);
 	auto nextButton = MenuItemSprite::create(
@@ -88,9 +88,9 @@ bool HelloWorld::init()
 											pSelectedSprite,
 											CC_CALLBACK_1(HelloWorld::nextSceneCallback, this));
 
-	//ƒƒjƒ…[‚Ìì¬@pMenu‚Ì’†‚ÉnextButton‚ð“ü‚ê‚é
+	//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ä½œæˆã€€pMenuã®ä¸­ã«nextButtonã‚’å…¥ã‚Œã‚‹
 	auto pMenu = Menu::create(nextButton, NULL);
-	//pMenu‚ð‰æ–Ê’†‰›‚É”z’u
+	//pMenuã‚’ç”»é¢ä¸­å¤®ã«é…ç½®
 	pMenu->setPosition(Vec2(s.width*.5, s.height*.5));
 	this->addChild(pMenu);
 
