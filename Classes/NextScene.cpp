@@ -7,6 +7,12 @@ using namespace std;
 
 USING_NS_CC;
 
+void set_number(string);
+void delete_before_chain();
+void delete_after_chain();
+void calclation(char);
+void create_chain();
+
 Scene* NextScene::createScene()
 {
 	// 'scene' is an autorelease object
@@ -58,12 +64,9 @@ bool NextScene::init()
 	disp->setPosition(Vec2(visibleSize.width*.2, visibleSize.height*.9));
 	this->addChild(disp, 1);
 
-	cr.resultstr = "0";
-	cr.resultnum = 0;
-	cr.opera = NULL;
-	cr.opera_flg = false;
-	dispnum = Label::createWithTTF(cr.resultstr, "fonts/arial.ttf", 36);
-	//auto dispnum = Label::createWithTTF(cr.resultnum, "fonts/arial.ttf", 36);
+	crp = new CalcResult();
+	dispnum = Label::createWithTTF(crp->resultstr, "fonts/arial.ttf", 36);
+	//auto dispnum = Label::createWithTTF(crp->resultnum, "fonts/arial.ttf", 36);
 	dispnum->setColor(ccc3(0, 0, 0));
 	dispnum->setPosition(Vec2(visibleSize.width*.5, visibleSize.height*.95));
 	this->addChild(dispnum, 1);
@@ -271,7 +274,9 @@ void NextScene::menuCloseCallback(Ref* pSender)
 	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.", "Alert");
 	return;
 #endif
-
+	delete_before_chain();
+	delete_after_chain();
+	delete crp;
 	Director::getInstance()->replaceScene(HelloWorld::createScene());
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
@@ -282,16 +287,76 @@ void NextScene::menuCloseCallback(Ref* pSender)
 // 数字をセットする
 void set_number(string s)
 {
-	if (cr.resultstr.length() >= 16)
+	if (crp->resultstr.length() >= 16)
 	{
-		cr.opera_flg = false;
+		crp->opera_flg = false;
 		return;
 	}
 
-	if (dispnum->getString() == "0" || cr.opera_flg == true) dispnum->setString(s);
+	delete_after_chain();
+
+	if (dispnum->getString() == "0" || crp->opera_flg == true) dispnum->setString(s);
 	else dispnum->setString(dispnum->getString() + s);
-	cr.resultstr = dispnum->getString();
-	cr.opera_flg = false;
+	crp->resultstr = dispnum->getString();
+	crp->opera_flg = false;
+}
+
+void delete_before_chain()
+{
+	int i, j;
+	CalcResult *curcrp;
+	CalcResult *delcrp[3] = { NULL, NULL, NULL };
+	i = 0;
+	j = 0;
+
+	curcrp = crp;
+	// 最大３回分の次チェーンを削除対象とする（前に戻れるのが３回までだから）
+	for (i = 0; i < 3; i++)
+	{
+		if (curcrp->bef != NULL)
+		{
+			delcrp[j] = curcrp->bef;
+			curcrp = curcrp->bef;
+			j++;
+		}
+	}
+	// 削除対象の結果を削除する
+	for (i = 0; i < 3; i++)
+	{
+		if (delcrp[i] != NULL) delete delcrp[i];
+	}
+
+	// 現在の次チェーンのリンクを消す
+	crp->bef = NULL;
+}
+
+void delete_after_chain()
+{
+	int i, j;
+	CalcResult *curcrp;
+	CalcResult *delcrp[3] = {NULL, NULL, NULL};
+	i = 0;
+	j = 0;
+
+	curcrp = crp;
+	// 最大３回分の次チェーンを削除対象とする（前に戻れるのが３回までだから）
+	for (i = 0; i < 3; i++)
+	{
+		if (curcrp->aft != NULL)
+		{
+			delcrp[j] = curcrp->aft;
+			curcrp = curcrp->aft;
+			j++;
+		}
+	}
+	// 削除対象の結果を削除する
+	for (i = 0; i < 3; i++)
+	{
+		if (delcrp[i] != NULL) delete delcrp[i];
+	}
+
+	// 現在の次チェーンのリンクを消す
+	crp->aft = NULL;
 }
 
 // 文字列変換
@@ -306,47 +371,92 @@ void calclation(char cal)
 	double num;
 	double result;
 
-	str << cr.resultstr;
+	str << crp->resultstr;
 	str >> num;
 
-	if (cr.opera_flg == true)
+	if (crp->opera_flg == true)
 	{
-		cr.opera = cal;
+		crp->opera = cal;
 		return;
 	}
 
-	if (cr.opera == NULL)
+	if (crp->opera == NULL)
 	{
-		cr.opera = cal;
-		cr.resultnum = num;
-		cr.opera_flg = true;
+		crp->opera = cal;
+		crp->resultnum = num;
+		crp->opera_flg = true;
 		return;
 	}
 
-	switch (cr.opera)
+	switch (crp->opera)
 	{
 	case '/':
-		result = cr.resultnum / num;
+		result = crp->resultnum / num;
 		break;
 	case '*':
-		result = cr.resultnum * num;
+		result = crp->resultnum * num;
 		break;
 	case '-':
-		result = cr.resultnum - num;
+		result = crp->resultnum - num;
 		break;
 	case '+':
-		result = cr.resultnum + num;
+		result = crp->resultnum + num;
 		break;
 	default:
 		result = num;
 		break;
 	}
-	cr.resultnum = result;
-	cr.resultstr = tostr(result);
+	crp->resultnum = result;
+	crp->resultstr = tostr(result);
 	dispnum->setString(tostr(result));
 
-	cr.opera = cal;
-	cr.opera_flg = true;
+	crp->opera = cal;
+	crp->opera_flg = true;
+}
+
+void create_chain()
+{
+	if (crp->opera_flg) return;
+	// 現在の結果をコピーしたインスタンスを作成
+	CalcResult *newcrp = new CalcResult(*crp);
+	// 現在の結果と新しい結果を相互リンクする
+	crp->aft = newcrp;
+	newcrp->bef = crp;
+	// 新しい結果をカレントとする
+	crp = newcrp;
+
+	// 過去３回以前の状態は削除する
+	CalcResult *delcrp = crp;
+	for (int i = 0; i < 3; i++)
+	{
+		if (delcrp->bef != NULL)
+		{
+			if (i == 2)
+			{
+				delete delcrp->bef;
+				delcrp->bef = NULL;
+			}
+			else
+			{
+				delcrp = delcrp->bef;
+			}
+		}
+	}
+}
+
+CalcResult::CalcResult()
+{
+	resultstr = "0";
+	resultnum = 0;
+	opera = NULL;
+	opera_flg = false;
+	bef = NULL;
+	aft = NULL;
+}
+
+CalcResult::~CalcResult()
+{
+	log("delete complete");
 }
 
 void NextScene::calcfunc1(Ref* pSender)
@@ -399,54 +509,85 @@ void NextScene::calcfunc0(Ref* pSender)
 
 void NextScene::warufunc(Ref* pSender)
 {
+	create_chain();
 	calclation('/');
 }
 
 void NextScene::kakerufunc(Ref* pSender)
 {
+	create_chain();
 	calclation('*');
 }
 
 void NextScene::hikufunc(Ref* pSender)
 {
+	create_chain();
 	calclation('-');
 }
 
 void NextScene::tasufunc(Ref* pSender)
 {
+	create_chain();
 	calclation('+');
 }
 
 void NextScene::equalfunc(Ref* pSender)
 {
+	create_chain();
 	calclation('=');
 }
 
 void NextScene::tenfunc(Ref* pSender)
 {
-	set_number(".");
+	if (crp->resultstr.length() >= 16 || crp->resultstr.find(".") != string::npos)
+	{
+		crp->opera_flg = false;
+		return;
+	}
+
+	if (dispnum->getString() == "0" || crp->opera_flg == true) dispnum->setString("0.");
+	else dispnum->setString(dispnum->getString() + ".");
+	crp->resultstr = dispnum->getString();
+	crp->opera_flg = false;
 }
 
 void NextScene::clearfunc(Ref* pSender)
 {
-	cr.resultstr = "0";
-	cr.resultnum = 0;
-	cr.opera = NULL;
-	cr.opera_flg = false;
+	crp->resultstr = "0";
+	crp->resultnum = 0;
+	crp->opera = NULL;
+	crp->opera_flg = false;
 	dispnum->setString("0");
 }
 
 void NextScene::clearendfunc(Ref* pSender)
 {
-	dispnum->setString(tostr(cr.resultnum));
-	cr.resultstr = "0";
-	cr.opera_flg = true;
+	if (crp->opera_flg == true)
+	{
+		dispnum->setString("0");
+	}
+	else
+	{
+		dispnum->setString("0");
+		crp->resultstr = "0";
+	}
+	crp->opera_flg = true;
 }
 
 void NextScene::leftfunc(Ref* pSender)
 {
+	if (crp->bef != NULL)
+	{
+		crp = crp->bef;
+		dispnum->setString(crp->resultstr);
+	}
 }
 
 void NextScene::rightfunc(Ref* pSender)
 {
+	if (crp->aft != NULL)
+	{
+		crp = crp->aft;
+		dispnum->setString(crp->resultstr);
+	}
 }

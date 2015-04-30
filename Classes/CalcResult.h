@@ -14,9 +14,12 @@ public:
 
 	CalcResult *bef;
 	CalcResult *aft;
+
+	CalcResult();
+	~CalcResult();
 };
 
-CalcResult cr;
+CalcResult *crp;
 cocos2d::Label *dispnum;
 
 #endif // __CALC_RESULT_H__
