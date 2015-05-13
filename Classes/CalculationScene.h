@@ -3,7 +3,7 @@
 
 #include "cocos2d.h"
 
-class NextScene : public cocos2d::Layer
+class CalculationScene : public cocos2d::Layer
 {
 public:
 	// there's no 'id' in cpp, so we recommend returning the class instance pointer
@@ -46,7 +46,7 @@ public:
 	void clearendfunc(cocos2d::Ref* pSender);
 
 	// implement the "static create()" method manually
-	CREATE_FUNC(NextScene);
+	CREATE_FUNC(CalculationScene);
 };
 
 #endif // __NEXT_SCENE_H__
