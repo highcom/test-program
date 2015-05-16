@@ -1,6 +1,5 @@
 ﻿#include <sstream>
 #include "CalculationScene.h"
-#include "HelloWorldScene.h"
 #include "CalcResult.h"
 
 using namespace std;
@@ -37,23 +36,15 @@ bool CalculationScene::init()
 		return false;
 	}
 
+    auto keyboardListener = cocos2d::EventListenerKeyboard::create();
+    keyboardListener->onKeyReleased = CC_CALLBACK_2(CalculationScene::onKeyReleased, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
+
 	Size visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto closeItem = MenuItemImage::create(
-		"CloseNormal.png",
-		"CloseSelected.png",
-		CC_CALLBACK_1(CalculationScene::menuCloseCallback, this));
-
-	closeItem->setPosition(Vec2(origin.x + visibleSize.width - closeItem->getContentSize().width / 2,
-		origin.y + closeItem->getContentSize().height / 2));
-
-	// create menu, it's an autorelease object
-	auto menu = Menu::create(closeItem, NULL);
-	menu->setPosition(Vec2::ZERO);
-	this->addChild(menu, 1);
 	// add "HelloWorld" splash screen"
-	auto sprite = Sprite::create("earth.png");
+	auto sprite = Sprite::create("background.png");
 	// position the sprite on the center of the screen
 	sprite->setPosition(Vec2(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
 	// add the sprite as a child to this layer
@@ -268,20 +259,14 @@ bool CalculationScene::init()
 	return true;
 }
 
-void CalculationScene::menuCloseCallback(Ref* pSender)
+// androidボタンイベント
+void CalculationScene::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event * event)
 {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WP8) || (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
-	MessageBox("You pressed the close button. Windows Store Apps do not implement a close button.", "Alert");
-	return;
-#endif
-	delete_before_chain();
-	delete_after_chain();
-	delete crp;
-	Director::getInstance()->replaceScene(HelloWorld::createScene());
-
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-	exit(0);
-#endif
+	// バックキーイベント
+    if (keyCode == EventKeyboard::KeyCode::KEY_ESCAPE)
+    {
+        Director::getInstance()->end(); // アプリを終了させる
+    }
 }
 
 // 数字をセットする
@@ -301,17 +286,18 @@ void set_number(string s)
 	crp->opera_flg = false;
 }
 
+// 計算履歴（古側）削除
 void delete_before_chain()
 {
 	int i, j;
 	CalcResult *curcrp;
-	CalcResult *delcrp[3] = { NULL, NULL, NULL };
+	CalcResult *delcrp[6] = { NULL, NULL, NULL, NULL, NULL, NULL };
 	i = 0;
 	j = 0;
 
 	curcrp = crp;
-	// 最大３回分の次チェーンを削除対象とする（前に戻れるのが３回までだから）
-	for (i = 0; i < 3; i++)
+	// 最大５回分の次チェーンを削除対象とする（前に戻れるのが５回までだから）
+	for (i = 0; i < 6; i++)
 	{
 		if (curcrp->bef != NULL)
 		{
@@ -321,7 +307,7 @@ void delete_before_chain()
 		}
 	}
 	// 削除対象の結果を削除する
-	for (i = 0; i < 3; i++)
+	for (i = 0; i < 6; i++)
 	{
 		if (delcrp[i] != NULL) delete delcrp[i];
 	}
@@ -330,17 +316,18 @@ void delete_before_chain()
 	crp->bef = NULL;
 }
 
+// 計算履歴（新側）削除
 void delete_after_chain()
 {
 	int i, j;
 	CalcResult *curcrp;
-	CalcResult *delcrp[3] = {NULL, NULL, NULL};
+	CalcResult *delcrp[6] = { NULL, NULL, NULL, NULL, NULL, NULL };
 	i = 0;
 	j = 0;
 
 	curcrp = crp;
-	// 最大３回分の次チェーンを削除対象とする（前に戻れるのが３回までだから）
-	for (i = 0; i < 3; i++)
+	// 最大５回分の次チェーンを削除対象とする（後に進めるのが５回までだから）
+	for (i = 0; i < 6; i++)
 	{
 		if (curcrp->aft != NULL)
 		{
@@ -350,7 +337,7 @@ void delete_after_chain()
 		}
 	}
 	// 削除対象の結果を削除する
-	for (i = 0; i < 3; i++)
+	for (i = 0; i < 6; i++)
 	{
 		if (delcrp[i] != NULL) delete delcrp[i];
 	}
@@ -364,6 +351,7 @@ template <typename T> std::string tostr(const T& t)
 {
     std::ostringstream os; os<<t; return os.str();
 }
+
 // 演算する
 void calclation(char cal)
 {
@@ -414,9 +402,9 @@ void calclation(char cal)
 	crp->opera_flg = true;
 }
 
+// 計算履歴作成
 void create_chain()
 {
-	if (crp->opera_flg) return;
 	// 現在の結果をコピーしたインスタンスを作成
 	CalcResult *newcrp = new CalcResult(*crp);
 	// 現在の結果と新しい結果を相互リンクする
@@ -425,13 +413,13 @@ void create_chain()
 	// 新しい結果をカレントとする
 	crp = newcrp;
 
-	// 過去３回以前の状態は削除する
+	// 過去５回以前の状態は削除する
 	CalcResult *delcrp = crp;
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		if (delcrp->bef != NULL)
 		{
-			if (i == 2)
+			if (i == 5)
 			{
 				delete delcrp->bef;
 				delcrp->bef = NULL;
@@ -444,6 +432,7 @@ void create_chain()
 	}
 }
 
+// コンストラクタ
 CalcResult::CalcResult()
 {
 	resultstr = "0";
@@ -454,89 +443,109 @@ CalcResult::CalcResult()
 	aft = NULL;
 }
 
+// デストラクタ
 CalcResult::~CalcResult()
 {
 	log("delete complete");
 }
 
+
+// 1ボタン
 void CalculationScene::calcfunc1(Ref* pSender)
 {
 	set_number("1");
 }
+
+// 2ボタン
 void CalculationScene::calcfunc2(Ref* pSender)
 {
 	set_number("2");
 }
+
+// 3ボタン
 void CalculationScene::calcfunc3(Ref* pSender)
 {
 	set_number("3");
 }
 
+// 4ボタン
 void CalculationScene::calcfunc4(Ref* pSender)
 {
 	set_number("4");
 }
 
+// 5ボタン
 void CalculationScene::calcfunc5(Ref* pSender)
 {
 	set_number("5");
 }
 
+// 6ボタン
 void CalculationScene::calcfunc6(Ref* pSender)
 {
 	set_number("6");
 }
 
+// 7ボタン
 void CalculationScene::calcfunc7(Ref* pSender)
 {
 	set_number("7");
 }
 
+// 8ボタン
 void CalculationScene::calcfunc8(Ref* pSender)
 {
 	set_number("8");
 }
 
+// 9ボタン
 void CalculationScene::calcfunc9(Ref* pSender)
 {
 	set_number("9");
 }
 
+// 0ボタン
 void CalculationScene::calcfunc0(Ref* pSender)
 {
 	set_number("0");
 }
 
+// ÷ボタン
 void CalculationScene::warufunc(Ref* pSender)
 {
-	create_chain();
 	calclation('/');
+	create_chain();
 }
 
+// ×ボタン
 void CalculationScene::kakerufunc(Ref* pSender)
 {
-	create_chain();
 	calclation('*');
+	create_chain();
 }
 
+// -ボタン
 void CalculationScene::hikufunc(Ref* pSender)
 {
-	create_chain();
 	calclation('-');
+	create_chain();
 }
 
+// +ボタン
 void CalculationScene::tasufunc(Ref* pSender)
 {
-	create_chain();
 	calclation('+');
+	create_chain();
 }
 
+// =ボタン
 void CalculationScene::equalfunc(Ref* pSender)
 {
-	create_chain();
 	calclation('=');
+	create_chain();
 }
 
+// .ボタン
 void CalculationScene::tenfunc(Ref* pSender)
 {
 	if (crp->resultstr.length() >= 16 || crp->resultstr.find(".") != string::npos)
@@ -551,6 +560,7 @@ void CalculationScene::tenfunc(Ref* pSender)
 	crp->opera_flg = false;
 }
 
+// Cボタン
 void CalculationScene::clearfunc(Ref* pSender)
 {
 	crp->resultstr = "0";
@@ -558,8 +568,11 @@ void CalculationScene::clearfunc(Ref* pSender)
 	crp->opera = 0x00;
 	crp->opera_flg = false;
 	dispnum->setString("0");
+	delete_before_chain();
+	delete_after_chain();
 }
 
+// CEボタン
 void CalculationScene::clearendfunc(Ref* pSender)
 {
 	if (crp->opera_flg == true)
@@ -574,15 +587,21 @@ void CalculationScene::clearendfunc(Ref* pSender)
 	crp->opera_flg = true;
 }
 
+// 左矢印ボタン
 void CalculationScene::leftfunc(Ref* pSender)
 {
 	if (crp->bef != NULL)
 	{
 		crp = crp->bef;
+		// 演算フラグが立っている場合は、現在と１つ前が同じ内容なので２つ分戻る。
+		if(crp->opera_flg &&
+			crp->resultstr == crp->aft->resultstr &&
+			crp->bef != NULL) crp = crp->bef;
 		dispnum->setString(crp->resultstr);
 	}
 }
 
+// 右矢印ボタン
 void CalculationScene::rightfunc(Ref* pSender)
 {
 	if (crp->aft != NULL)
